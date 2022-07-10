@@ -21,6 +21,14 @@
           data-dtype="Number" />
       </div>
     </li>
+	<li class="attribute flexrow" data-skills="alchemy">
+      <h4 class="attribute-name box-title" title="{{localize 'WWN.skills.desc.alchemy'}}">
+        <a>{{ localize "WWN.skills.alchemy" }}</a></h4>
+      <div class="attribute-value">
+        <input name="data.skills.alchemy.value" type="number" value="{{data.skills.alchemy.value}}" data-dtype="Number"
+          />
+      </div>
+    </li>
     <li class="attribute flexrow" data-skills="connect">
       <h4 class="attribute-name box-title" title="{{localize 'WWN.skills.desc.connect'}}">
         <a>{{ localize "WWN.skills.connect" }}</a></h4>
@@ -42,6 +50,14 @@
         <a>{{ localize "WWN.skills.craft" }}</a></h4>
       <div class="attribute-value">
         <input name="data.skills.craft.value" type="number" value="{{data.skills.craft.value}}" data-dtype="Number"
+          />
+      </div>
+    </li>
+	<li class="attribute flexrow" data-skills="enchant">
+      <h4 class="attribute-name box-title" title="{{localize 'WWN.skills.desc.enchant'}}">
+        <a>{{ localize "WWN.skills.enchant" }}</a></h4>
+      <div class="attribute-value">
+        <input name="data.skills.enchant.value" type="number" value="{{data.skills.enchant.value}}" data-dtype="Number"
           />
       </div>
     </li>
@@ -177,6 +193,7 @@
           />
       </div>
     </li>
+	<!--
     <li class="attribute flexrow" data-skills="work">
       <h4 class="attribute-name box-title" title="{{localize 'WWN.skills.desc.work'}}">
         <a>{{ localize "WWN.skills.work" }}</a></h4>
@@ -185,6 +202,7 @@
           />
       </div>
     </li>
+	-->
   </div>
 </ul>
 {{#if config.psychicSkills}}

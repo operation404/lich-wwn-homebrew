@@ -182,7 +182,19 @@
               {{/select}}
             </select>
           </div>
-        </div>
+        </div>		
+		<div class="form-group">
+          <label>{{localize 'WWN.skills.alchemy'}}</label>
+          <div class="form-fields">
+            <select id="alchemy" name="data.skills.alchemy.dice">
+              {{#select data.skills.alchemy.dice}}
+              <option value="2d6">2d6</option>
+              <option value="3d6k2">3d6</option>
+              <option value="4d6k2">4d6</option>
+              {{/select}}
+            </select>
+          </div>
+        </div>				
         <div class="form-group">
           <label>{{localize 'WWN.skills.connect'}}</label>
           <div class="form-fields">
@@ -218,7 +230,19 @@
               {{/select}}
             </select>
           </div>
-        </div>
+        </div>			
+        <div class="form-group">
+          <label>{{localize 'WWN.skills.enchant'}}</label>
+          <div class="form-fields">
+            <select id="enchant" name="data.skills.enchant.dice">
+              {{#select data.skills.enchant.dice}}
+              <option value="2d6">2d6</option>
+              <option value="3d6k2">3d6</option>
+              <option value="4d6k2">4d6</option>
+              {{/select}}
+            </select>
+          </div>
+        </div>		
         <div class="form-group">
           <label>{{localize 'WWN.skills.exert'}}</label>
           <div class="form-fields">
@@ -410,7 +434,8 @@
               {{/select}}
             </select>
           </div>
-        </div>
+        </div>		
+		<!--
         <div class="form-group">
           <label>{{localize 'WWN.skills.work'}}</label>
           <div class="form-fields">
@@ -423,6 +448,7 @@
             </select>
           </div>
         </div>
+		-->		
       </div>
       {{/if}}
     </div>

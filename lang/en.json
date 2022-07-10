@@ -433,7 +433,13 @@
   "WWN.skills.desc.telepathy": "Master the reading and influencing of other sapient minds.",
   "WWN.skills.teleportation": "Teleportation",
   "WWN.skills.desc.teleportation": "Master the arts of physical translocation of yourself and allies.",
-  "WWN.skills.polymath": "Polymath",
+  "WWN.skills.polymath": "Polymath",  
+  "WWN.skills.alchemy": "Alchemy",
+  "WWN.skills.desc.alchemy": "The alchemy skill is used to identify unknown potions, and to create new potions and formulas. Alchemy is also used to identify unknown substances, no matter the properties. Whether it be some glowing crystal, a type of stone, or a strange liquid.",
+  "WWN.skills.enchant": "Enchant",
+  "WWN.skills.desc.enchant": "Used for creating most magical things, like workings, magic items, and calyxes.",
+
+  
 
   "WWN.messages.GetExperience": "{name} gained {value} experience points!",
   "WWN.messages.AttackSuccess": "<b>Hits AC {result}!</b> ({bonus})",

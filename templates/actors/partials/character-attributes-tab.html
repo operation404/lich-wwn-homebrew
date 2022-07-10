@@ -151,6 +151,7 @@
                     <div class="attribute-value">
                         <input name="data.saves.evasion.value" type="number" value="{{data.saves.evasion.value}}"
                             placeholder="0" data-dtype="Number" disabled />
+					</div>
                 </li>
                 <li class="attribute saving-throw" data-save="mental">
                     <h4 class="attribute-name box-title">
@@ -159,6 +160,7 @@
                     <div class="attribute-value">
                         <input name="data.saves.mental.value" type="number" value="{{data.saves.mental.value}}"
                             placeholder="0" data-dtype="Number" disabled />
+					</div>
                 </li>
                 <li class="attribute saving-throw" data-save="physical">
                     <h4 class="attribute-name box-title">
@@ -167,6 +169,7 @@
                     <div class="attribute-value">
                         <input name="data.saves.physical.value" type="number" value="{{data.saves.physical.value}}"
                             placeholder="0" data-dtype="Number" disabled />
+					</div>
                 </li>
                 <li class="attribute saving-throw" data-save="luck">
                     <h4 class="attribute-name box-title">
@@ -175,6 +178,7 @@
                     <div class="attribute-value">
                         <input name="data.saves.luck.value" type="number" value="{{data.saves.luck.value}}"
                             placeholder="0" data-dtype="Number" disabled />
+					</div>
                 </li>
             </ul>
         </div>
@@ -196,6 +200,24 @@
                 </div>
                 <div class="attribute-value">
                     <input name="data.skills.administer.value" type="number" value="{{data.skills.administer.value}}"
+                        data-dtype="Number" />
+                </div>
+            </li>
+			<li class="attribute skills" data-skills="alchemy">
+                <h4 class="attribute-name box-title" title="{{ localize 'WWN.skills.desc.alchemy' }}">
+                    <a>{{ localize "WWN.skills.alchemy" }}</a>
+                </h4>
+                <div class="form-fields select-attribute selectAttribute">
+                    <select name="data.skills.alchemy.stat">
+                    {{#select data.skills.alchemy.stat}}
+                    {{#each config.scores as |stat a|}}
+                    <option value="{{a}}">{{stat}}</option>
+                    {{/each}}
+                    {{/select}}
+                    </select>
+                </div>
+                <div class="attribute-value">
+                    <input name="data.skills.alchemy.value" type="number" value="{{data.skills.alchemy.value}}"
                         data-dtype="Number" />
                 </div>
             </li>
@@ -250,6 +272,24 @@
                 </div>
                 <div class="attribute-value">
                     <input name="data.skills.craft.value" type="number" value="{{data.skills.craft.value}}"
+                        data-dtype="Number" />
+                </div>
+            </li>
+			<li class="attribute skills" data-skills="enchant">
+                <h4 class="attribute-name box-title" title="{{ localize 'WWN.skills.desc.enchant' }}">
+                    <a>{{ localize "WWN.skills.enchant" }}</a>
+                </h4>
+                <div class="form-fields select-attribute selectAttribute">
+                    <select name="data.skills.enchant.stat">
+                    {{#select data.skills.enchant.stat}}
+                    {{#each config.scores as |stat a|}}
+                    <option value="{{a}}">{{stat}}</option>
+                    {{/each}}
+                    {{/select}}
+                    </select>
+                </div>
+                <div class="attribute-value">
+                    <input name="data.skills.enchant.value" type="number" value="{{data.skills.enchant.value}}"
                         data-dtype="Number" />
                 </div>
             </li>
@@ -342,8 +382,12 @@
                     <input name="data.skills.magic.value" type="number" value="{{data.skills.magic.value}}"
                         data-dtype="Number" />
                 </div>
-            </li>
-            <li class="attribute skills" data-skills="notice">
+            </li>       
+        </ul>
+    </div>
+    <div class="attribute-group skill-group">
+        <ul class="attributes">
+			<li class="attribute skills" data-skills="notice">
                 <h4 class="attribute-name box-title" title="{{ localize 'WWN.skills.desc.notice' }}">
                     <a>{{ localize "WWN.skills.notice" }}</a>
                 </h4>
@@ -379,10 +423,6 @@
                         data-dtype="Number" />
                 </div>
             </li>
-        </ul>
-    </div>
-    <div class="attribute-group skill-group">
-        <ul class="attributes">
             <li class="attribute skills" data-skills="pray">
                 <h4 class="attribute-name box-title" title="{{ localize 'WWN.skills.desc.pray' }}">
                     <a>{{ localize "WWN.skills.pray" }}</a>
@@ -544,7 +584,8 @@
                     <input name="data.skills.trade.value" type="number" value="{{data.skills.trade.value}}"
                         data-dtype="Number" />
                 </div>
-            </li>
+            </li>		
+			<!--
             <li class="attribute skills" data-skills="work">
                 <h4 class="attribute-name box-title" title="{{ localize 'WWN.skills.desc.work' }}">
                     <a>{{ localize "WWN.skills.work" }}</a>
@@ -563,6 +604,7 @@
                         data-dtype="Number" />
                 </div>
             </li>
+			-->
             <li class="attribute skills">
                 <h4 class="attribute-name box-title" title="WWN.skills.unspentPointsHint">
                     <a>{{ localize "WWN.skills.unspentPoints" }}</a>

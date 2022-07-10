@@ -273,6 +273,16 @@
           "dice": "2d6",
           "stat": "str"
         },
+		"alchemy": {
+          "value": -1,
+          "dice": "2d6",
+          "stat": "str"
+        },
+		"enchant": {
+          "value": -1,
+          "dice": "2d6",
+          "stat": "str"
+        },
         "unspent:": 0
       },
       "scores": {
