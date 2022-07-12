@@ -2,10 +2,10 @@
   "name": "wwn",
   "title": "Worlds Without Number",
   "description": "Play Worlds Without Number on Foundry VTT",
-  "version": "0.9.9c",
+  "version": "1.0.0-beta5",
   "minimumCoreVersion": "0.8.9",
   "compatibleCoreVersion": "9",
-  "templateVersion": 6.5,
+  "templateVersion": 6.6,
   "author": "SobranDM",
   "esmodules": ["wwn.js"],
   "styles": ["wwn.css"],
@@ -129,6 +129,14 @@
       "module": "wwn",
       "path": "packs/ose-spells.db",
       "entity": "Item"
+    },
+    {
+      "name": "tags",
+      "label": "Tags",
+      "system": "wwn",
+      "module": "wwn",
+      "path": "packs/tags.db",
+      "entity": "JournalEntry"
     }
   ],
   "languages": [
@@ -141,6 +149,6 @@
   "gridDistance": 5,
   "gridUnits": "ft",
   "url": "https://github.com/SobranDM/foundryvtt-wwn",
-  "manifest": "https://github.com/SobranDM/foundryvtt-wwn/releases/latest/download/system.json",
-  "download": "https://github.com/SobranDM/foundryvtt-wwn/releases/download/v0.9.9c/wwn.zip"
+  "manifest": "https://github.com/SobranDM/foundryvtt-wwn/releases/download/v1.0.0-beta5/system.json",
+  "download": "https://github.com/SobranDM/foundryvtt-wwn/releases/download/v1.0.0-beta5/wwn.zip"
 }

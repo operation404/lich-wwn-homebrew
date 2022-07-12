@@ -1,3 +1,25 @@
+## New in 1.0.0
+### Changes
+* Added a number of tables to the GM Master Tables compendium, including but not limited to: monster generation, room stocking, hex points of interest, and other features of ruin generation. Also...
+* All tags have been added to the new Tags compendium. If the Compendium Folders module is installed, tags will be sorted by tag type: community, court, ruin, or wilderness. Without Compendium Folders, the compendium will still function but the tags will be lumped together. Each tag category also has a relevant roll table.
+* Shock damage now displays a button to apply damage to selected tokens.
+* Monster weapon counters now reset at the top of each round.
+* You can now buy me a coffee on Ko-Fi if you wanted to... for some reason?
+* Added new tag, CB, to denote a crossbow. This tag, if present, will eliminate the unskilled penalty for using it without at least a 0 in the relevant skill. The crossbows in the compendiums have been updated, while any existing crossbows in your game will not be touched. You may manually add the CB tag in the tags field of the weapon, thereby eliminating any futzing about with attack bonuses you may have been using to fudge this.
+* Randomize HP on unlinked tokens by enabling the option in system settings. This is a per-client setting, so the GM enabling it doesn't cause player summons to have random HP and vice-versa.
+* Button in Currency header allows adjusting currencies without doing math because math is hard.
+* Button in Party sheet distributes silver to everyone in the party, respecting the share setting in tweaks in the same manner as the deal XP function. Note that silver goes to the bank and not to inventory, as this is simply meant to ease the distribution of large amounts of coin at the end of an adventure.
+* Attack and damage rolls now display a tooltip when hovered, showing you the source of any modifiers.
+### Fixes
+* Changed the sort method on items to improve performance.
+* Re-enabled direct editing of spell slots.
+* Miscellaneous errors with creature compendiums.
+* Exert and Sneak are now correctly penalized for armor type.
+* Monster inventory should now correctly display a scroll bar when it overflows.
+* Changed a couple tooltips on the spell sheet to correctly reflect their function: to reset Effort.
+* Armors, foci, and items no longer display twice when rolled.
+* Fixed the icons for reload and slow reload, as they were reversed. (Why should the bow be the one with the crossbow icon?). This may require clearing your cache to see.
+* Small change to shock to better deal with low-level Vowed and the Unarmed Combatant focus: if the Shock field of a weapon is set to 0, shock will still be calculated. If the field is blank, shock will be omitted.
 ## New in 0.9.9b
 * Initiative fixes
 ## New in 0.9.9

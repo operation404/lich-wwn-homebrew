@@ -248,12 +248,22 @@ export class WwnCombat {
   }
 
   static async preUpdateCombat(combat, data, diff, id) {
-    let init = game.settings.get("wwn", "initiative");
-    let reroll = game.settings.get("wwn", "rerollInitiative");
+    const init = game.settings.get("wwn", "initiative");
+    const reroll = game.settings.get("wwn", "rerollInitiative");
     if (!data.round) {
       return;
     }
     if (data.round !== 1) {
+      for (const combatant of combat.combatants) {
+        if (combatant.actor.type === "monster") {
+          for (const itm of combatant.actor.items) {
+            if (itm.data.data.counter) {
+              const item = combatant.actor.data.items.get(itm.id);
+              await item.update({ "data.counter.value": item.data.data.counter.max });
+            }
+          };
+        }
+      };
       if (reroll === "reset") {
         WwnCombat.resetInitiative(combat, data, diff, id);
         return;
@@ -266,5 +276,17 @@ export class WwnCombat {
     } else {
       WwnCombat.individualInitiative(combat, data, diff, id);
     }
+  }
+
+  static async preCreateToken(token, data, options, userId) {
+    const scene = token.parent;
+    const actor = game.actors.get(data.actorId);
+    if (!actor || data.actorLink || !game.settings.get("wwn", "randomHP")) {
+      return token.data.update(data);
+    }
+    const roll = new Roll(token.actor.data.data.hp.hd).roll({ async: false });
+    setProperty(data, "actorData.data.hp.value", roll.total);
+    setProperty(data, "actorData.data.hp.max", roll.total);
+    return token.data.update(data);
   }
 }

@@ -1,7 +1,9 @@
 import { WwnActor } from "./entity.js";
 import { WwnActorSheet } from "./actor-sheet.js";
 import { WwnCharacterModifiers } from "../dialog/character-modifiers.js";
+import { WwnAdjustCurrency } from "../dialog/adjust-currency.js";
 import { WwnCharacterCreator } from "../dialog/character-creation.js";
+import insertionSort from "../insertionSort.js";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -38,9 +40,9 @@ export class WwnActorSheetCharacter extends WwnActorSheet {
    * Organize and classify Owned Items for Character sheets
    * @private
    */
-   _prepareItems(data) {
+  _prepareItems(data) {
     // Partition items by category
-    let [items, weapons, armors, abilities, spells, arts, foci] = this.actor.data.items.reduce(
+    let [items, weapons, armors, abilities, spells, arts, foci, skills] = this.actor.data.items.reduce(
       (arr, item) => {
         // Classify items into types
         if (item.type === "item") arr[0].push(item);
@@ -50,9 +52,10 @@ export class WwnActorSheetCharacter extends WwnActorSheet {
         else if (item.type === "spell") arr[4].push(item);
         else if (item.type === "art") arr[5].push(item);
         else if (item.type === "focus") arr[6].push(item);
+        else if (item.type === "skill") arr[7].push(item);
         return arr;
       },
-      [[], [], [], [], [], [], []]
+      [[], [], [], [], [], [], [], []]
     );
 
     // Sort spells by level
@@ -65,55 +68,31 @@ export class WwnActorSheetCharacter extends WwnActorSheet {
       slots[lvl] += spells[i].data.data.memorized;
       sortedSpells[lvl].push(spells[i]);
     }
+
+    // Sort each level
     Object.keys(sortedSpells).forEach(level => {
-      sortedSpells[level].sort((a, b) => {
-        const aName = a.name.toLowerCase(), bName = b.name.toLowerCase();
-        const aSource = a.data.data.class.toLowerCase(), bSource = b.data.data.class.toLowerCase();
-        if (aSource > bSource) {
-          return 1;
-        } else if (bSource > aSource) {
-          return -1;
-        } else {
-          return aName > bName ? 1 : bName > aName ? -1 : 0;
-        }
-      })
-    })
+      let list = insertionSort(sortedSpells[level], "name");
+      list = insertionSort(list, "data.data.class");
+      sortedSpells[level] = list;
+    });
+
     data.slots = {
       used: slots,
     };
+
+    // Sort arts by name and then by source
+    arts = insertionSort(arts, "name");
+    arts = insertionSort(arts, "data.data.source");
+
     // Assign and return
     data.owned = {
-      items: items.sort((a, b) => {
-        const aName = a.name.toLowerCase(), bName = b.name.toLowerCase();
-        return aName > bName ? 1 : bName > aName ? -1 : 0;
-      }),
-      armors: armors.sort((a, b) => {
-        const aName = a.name.toLowerCase(), bName = b.name.toLowerCase();
-        return aName > bName ? 1 : bName > aName ? -1 : 0;
-      }),
-      abilities: abilities.sort((a, b) => {
-        const aName = a.name.toLowerCase(), bName = b.name.toLowerCase();
-        return aName > bName ? 1 : bName > aName ? -1 : 0;
-      }),
-      weapons: weapons.sort((a, b) => {
-        const aName = a.name.toLowerCase(), bName = b.name.toLowerCase();
-        return aName > bName ? 1 : bName > aName ? -1 : 0;
-      }),
-      arts: arts.sort((a, b) => {
-        const aName = a.name.toLowerCase(), bName = b.name.toLowerCase();
-        const aSource = a.data.data.source.toLowerCase(), bSource = b.data.data.source.toLowerCase();
-        if (aSource > bSource) {
-          return 1;
-        } else if (bSource > aSource) {
-          return -1;
-        } else {
-          return aName > bName ? 1 : bName > aName ? -1 : 0;
-        }
-      }),
-      foci: foci.sort((a, b) => {
-        const aName = a.name.toLowerCase(), bName = b.name.toLowerCase();
-        return aName > bName ? 1 : bName > aName ? -1 : 0;
-      })
+      items: insertionSort(items, "name"),
+      armors: insertionSort(armors, "name"),
+      abilities: insertionSort(abilities, "name"),
+      weapons: insertionSort(weapons, "name"),
+      arts: arts,
+      foci: insertionSort(foci, "name"),
+      skills: insertionSort(skills, "name")
     };
     data.spells = sortedSpells;
   }
@@ -123,6 +102,13 @@ export class WwnActorSheetCharacter extends WwnActorSheet {
     new WwnCharacterCreator(this.actor, {
       top: this.position.top + 40,
       left: this.position.left + (this.position.width - 400) / 2,
+    }).render(true);
+  }
+
+  adjustCurrency() {
+    new WwnAdjustCurrency(this.actor, {
+      top: this.position.top + 300,
+      left: this.position.left + (this.position.width - 200) / 2,
     }).render(true);
   }
 
@@ -136,7 +122,6 @@ export class WwnActorSheetCharacter extends WwnActorSheet {
     data.config.initiative = game.settings.get("wwn", "initiative") != "group";
     data.config.showMovement = game.settings.get("wwn", "showMovement");
     data.config.currencyTypes = game.settings.get("wwn", "currencyTypes");
-    data.config.psychicSkills = game.settings.get("wwn", "psychicSkills");
 
     this._prepareItems(data);
     return data;
@@ -399,5 +384,9 @@ export class WwnActorSheetCharacter extends WwnActorSheet {
     html.find("a[data-action='generate-scores']").click((ev) => {
       this.generateScores(ev);
     });
+
+    html.find("a[data-action='currency-adjust']").click((ev) => {
+      this.adjustCurrency(ev);
+    })
   }
 }
