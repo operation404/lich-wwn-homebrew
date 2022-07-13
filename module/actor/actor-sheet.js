@@ -5,6 +5,7 @@ export class WwnActorSheet extends ActorSheet {
   constructor(...args) {
     super(...args);
   }
+  
   /* -------------------------------------------- */
 
   getData() {

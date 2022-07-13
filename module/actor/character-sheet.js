@@ -5,6 +5,10 @@ import { WwnAdjustCurrency } from "../dialog/adjust-currency.js";
 import { WwnCharacterCreator } from "../dialog/character-creation.js";
 import insertionSort from "../insertionSort.js";
 
+// SWB custom attributes support
+import { EntitySheetHelper } from "./swb-helper.js";
+import {ATTRIBUTE_TYPES} from "./constants.js";
+
 /**
  * Extend the basic ActorSheet with some very simple modifications
  */
@@ -12,6 +16,16 @@ export class WwnActorSheetCharacter extends WwnActorSheet {
   constructor(...args) {
     super(...args);
   }
+
+  /* Additions for SWB custom attributes */
+
+  _getSubmitData(updateData) {
+    let formData = super._getSubmitData(updateData);
+    formData = EntitySheetHelper.updateAttributes(formData, this.object);
+    formData = EntitySheetHelper.updateGroups(formData, this.object);
+    return formData;
+  }
+
 
   /* -------------------------------------------- */
 
@@ -118,6 +132,13 @@ export class WwnActorSheetCharacter extends WwnActorSheet {
    */
   getData() {
     const data = super.getData();
+	
+	// Adding for SWB custom attributes
+	EntitySheetHelper.getAttributeData(data);
+    data.shorthand = !!game.settings.get("wwn", "macroShorthand");
+    data.systemData = data.data;
+    data.dtypes = ATTRIBUTE_TYPES;
+	//---------------------------------------
 
     data.config.initiative = game.settings.get("wwn", "initiative") != "group";
     data.config.showMovement = game.settings.get("wwn", "showMovement");
@@ -387,6 +408,68 @@ export class WwnActorSheetCharacter extends WwnActorSheet {
 
     html.find("a[data-action='currency-adjust']").click((ev) => {
       this.adjustCurrency(ev);
-    })
+    });
+	
+	
+	
+	// Additions for swb custom attributes -----------------------------------------------
+   
+   // Attribute Management
+    html.find(".custom-attributes-tab").on("click", ".attribute-control", EntitySheetHelper.onClickAttributeControl.bind(this));
+    html.find(".groups").on("click", ".group-control", EntitySheetHelper.onClickAttributeGroupControl.bind(this));
+    html.find(".custom-attributes-tab").on("click", "a.attribute-roll", EntitySheetHelper.onAttributeRoll.bind(this));
+
+    // Item Controls
+    html.find(".item-control").click(this._onItemControl.bind(this));
+    html.find(".items .rollable").on("click", this._onItemRoll.bind(this));
+
+    // Add draggable for Macro creation
+    html.find(".custom-attributes-tab a.attribute-roll").each((i, a) => {
+      a.setAttribute("draggable", true);
+      a.addEventListener("dragstart", ev => {
+        let dragData = ev.currentTarget.dataset;
+        ev.dataTransfer.setData('text/plain', JSON.stringify(dragData));
+      }, false);
+    });
+	
+	
+	
   }
+  
+  // Added for SWB custom attributes
+   _onItemRoll(event) {
+    let button = $(event.currentTarget);
+    const li = button.parents(".item");
+    const item = this.actor.items.get(li.data("itemId"));
+    let r = new Roll(button.data('roll'), this.actor.getRollData());
+    return r.toMessage({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      flavor: `<h2>${item.name}</h2><h3>${button.text()}</h3>`
+    });
+  }
+  
+  
+    // Added for SWB custom attributes
+   _onItemControl(event) {
+    event.preventDefault();
+
+    // Obtain event data
+    const button = event.currentTarget;
+    const li = button.closest(".item");
+    const item = this.actor.items.get(li?.dataset.itemId);
+
+    // Handle different actions
+    switch ( button.dataset.action ) {
+      case "create":
+        const cls = getDocumentClass("Item");
+        return cls.create({name: game.i18n.localize("SIMPLE.ItemNew"), type: "item"}, {parent: this.actor});
+      case "edit":
+        return item.sheet.render(true);
+      case "delete":
+        return item.delete();
+    }
+  }
+  
+  
 }

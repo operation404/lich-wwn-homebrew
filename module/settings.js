@@ -160,4 +160,18 @@ export const registerSettings = function () {
     },
     onChange: _ => window.location.reload()
   });
+  
+  
+  // Added for SWB custom attributes
+  
+  game.settings.register("wwn", "macroShorthand", {
+    name: "SETTINGS.SimpleMacroShorthandN",
+    hint: "SETTINGS.SimpleMacroShorthandL",
+    scope: "world",
+    type: Boolean,
+    default: true,
+    config: true
+  });
+  
+  
 };

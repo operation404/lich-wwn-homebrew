@@ -336,7 +336,13 @@
       },
       "languages": {
         "value": []
-      }
+      },
+	  
+	  
+	  
+	  "attributes": {},
+	  "groups": {}
+	  
     },
     "monster": {
       "templates": ["common", "spellcaster"],
