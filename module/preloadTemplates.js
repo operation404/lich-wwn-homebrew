@@ -10,6 +10,11 @@ export const preloadHandlebarsTemplates = async function () {
         'systems/wwn/templates/actors/partials/character-spells-tab.html',
         'systems/wwn/templates/actors/partials/character-inventory-tab.html',
         'systems/wwn/templates/actors/partials/character-notes-tab.html',
+		
+			
+		'systems/wwn/templates/actors/partials/character-custom-attributes-tab.html',
+		'systems/wwn/templates/actors/partials/parts/sheet-groups.html',
+		'systems/wwn/templates/actors/partials/parts/sheet-attributes.html',
 
         'systems/wwn/templates/actors/partials/monster-header.html',
         'systems/wwn/templates/actors/partials/monster-attributes-tab.html'

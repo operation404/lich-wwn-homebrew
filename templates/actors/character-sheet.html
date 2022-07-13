@@ -20,6 +20,14 @@
     <a class="item" data-tab="notes">
       {{localize "WWN.category.details"}}
     </a>
+	
+	
+	<!-- Added for custom attribute support SWB  -->
+	
+	<a class="item" data-tab="custom-attributes" style="white-space: nowrap;">
+	  {{localize "SIMPLE.CustomAttributeTab"}}
+    </a>
+	
   </nav>
   {{! Sheet Body }}
   <section class="sheet-body">
@@ -38,5 +46,11 @@
     <div class="tab" data-group="primary" data-tab="notes">
       {{> "systems/wwn/templates/actors/partials/character-notes-tab.html"}}
     </div>
+	
+	<!-- Added for custom attribute support SWB  -->
+	<div class="tab" data-group="primary" data-tab="custom-attributes">
+	  {{> "systems/wwn/templates/actors/partials/character-custom-attributes-tab.html"}}
+    </div>
+	
   </section>
 </form>
