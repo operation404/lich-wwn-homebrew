@@ -48,6 +48,11 @@ export class EntitySheetHelper {
       data.data.ungroupedAttributes[key] = data.data.attributes[key];
     });
 
+  /*
+    Didn't add SWB custom attribute support to items, so this breaks actor sheets
+	by trying to get non-existant attributes from items an actor owns.
+  */
+	/*
     // Modify attributes on items.
     if ( data.items ) {
       data.items.forEach(item => {
@@ -84,6 +89,8 @@ export class EntitySheetHelper {
         }
       });
     }
+	*/
+	
   }
 
   /* -------------------------------------------- */
