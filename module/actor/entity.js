@@ -26,10 +26,10 @@ export class WwnActor extends Actor {
     this._applyShorthand(data, formulaAttributes, shorthand);
 
     // Map all items data using their slugified names
-    this._applyItems(data, itemAttributes, shorthand);
+    //this._applyItems(data, itemAttributes, shorthand);
 
     // Evaluate formula replacements on items.
-    this._applyItemsFormulaReplacements(data, itemAttributes, shorthand);
+    //this._applyItemsFormulaReplacements(data, itemAttributes, shorthand);
 
     // Evaluate formula attributes after all other attributes have been handled, including items.
     this._applyFormulaReplacements(data, formulaAttributes, shorthand);
