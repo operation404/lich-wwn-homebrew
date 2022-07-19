@@ -388,57 +388,7 @@ export class WwnActor extends Actor {
     });
   }
 
-  rollSkills(expl, options = {}) {
-    let selectedStat = this.data.data.skills[expl].stat;
-    let combatSkill = false;
-    let skillPenalty = 0;
-    const poly = this.data.items.filter((p) => p.name == "Polymath");
-    const label = game.i18n.localize(`WWN.skills.${expl}`);
-    const statLabel = game.i18n.localize(`WWN.scores.${selectedStat}.long`);
-
-    const data = {
-      actor: this.data,
-      roll: {
-        type: "skill",
-        target: this.data.data.skills[expl].value,
-      },
-      details: game.i18n.format("WWN.roll.details.skills", {
-        expl: label,
-      }),
-    };
-    if (expl == "shoot" || expl == "stab" || expl == "punch") {
-      combatSkill = true;
-    } else if (expl == "exert" && this.data.data.skills.exert.penalty > 0) {
-      skillPenalty = this.data.data.skills.exert.penalty;
-    } else if (expl == "sneak" && this.data.data.skills.sneak.penalty > 0) {
-      skillPenalty = this.data.data.skills.sneak.penalty;
-    }
-    const rollParts = [this.data.data.skills[expl].dice];
-    if (poly.length > 0 && !combatSkill) {
-      rollParts.push(Math.max(this.data.data.skills[expl].value, poly[0].data.data.ownedLevel - 1));
-    } else {
-      rollParts.push(this.data.data.skills[expl].value);
-    }
-    rollParts.push(this.data.data.scores[selectedStat].mod);
-    if (skillPenalty > 0) {
-      rollParts.push(-skillPenalty);
-    }
-
-    let skip = options.event && options.event.ctrlKey;
-
-    // Roll and return
-    return WwnDice.Roll({
-      event: options.event,
-      parts: rollParts,
-      data: data,
-      skipDialog: skip,
-      speaker: ChatMessage.getSpeaker({ actor: this }),
-      flavor: game.i18n.format("WWN.roll.skills", { skills: statLabel + " / " + label }),
-      title: game.i18n.format("WWN.roll.skills", { skills: statLabel + " / " + label }),
-    });
-  }
-
-  rollMonsterSkill(skill, options = {}) {
+  rollMonsterSkill(options = {}) {
     const label = game.i18n.localize(`WWN.skill`);
     const rollParts = ["2d6"];
 
@@ -518,12 +468,21 @@ export class WwnActor extends Actor {
     }
   }
 
-  rollAttack(attData, options = {}) {
+  rollAttack(attData, options = {}) { 
     const data = this.data.data;
     const rollParts = ["1d20"];
     const dmgParts = [];
     const rollLabels = [];
     const dmgLabels = [];
+    const weaponShock = attData.item.data.shock.damage;
+    let statAttack, skillAttack, statValue, skillValue;
+    if (data.character) {
+      statAttack = attData.item.data.score;
+      skillAttack = attData.item.data.skill;
+      skillValue = this.items.find(item => item.type === "skill" && item.name.toLowerCase() === skillAttack).data.data.ownedLevel;
+      statValue = this.data.data.scores[statAttack].mod;
+    }
+
     let readyState = "";
     let label = game.i18n.format("WWN.roll.attacks", {
       name: this.data.name,
@@ -548,21 +507,14 @@ export class WwnActor extends Actor {
     }
 
     if (data.character) {
-      const statAttack = attData.item.data.score;
-      const skillAttack = attData.item.data.skill;
       if (data.warrior) {
-        let levelRoundedUp = Math.ceil(this.data.data.details.level / 2);
-        attData.item.data.shockTotal =
-          this.data.data.scores[statAttack].mod +
-          attData.item.data.shock.damage +
-          levelRoundedUp;
+        const levelRoundedUp = Math.ceil(this.data.data.details.level / 2);
+        attData.item.data.shockTotal = statValue + weaponShock + levelRoundedUp;
       } else {
-        attData.item.data.shockTotal =
-          this.data.data.scores[statAttack].mod +
-          attData.item.data.shock.damage;
+        attData.item.data.shockTotal = statValue + weaponShock;
       }
       if (attData.item.data.skillDamage) {
-        attData.item.data.shockTotal = attData.item.data.shockTotal + this.data.data.skills[skillAttack].value;
+        attData.item.data.shockTotal = attData.item.data.shockTotal + skillValue;
       }
     } else {
       attData.item.data.shockTotal = this.data.data.damageBonus + attData.item.data.shock.damage;
@@ -578,17 +530,15 @@ export class WwnActor extends Actor {
       );
     } */
     if (data.character) {
-      const statAttack = attData.item.data.score;
-      const skillAttack = attData.item.data.skill;
       const unskilledAttack = attData.item.data.tags.find(weapon => weapon.title === "CB" ) ? 0 : -2;
-      rollParts.push(this.data.data.scores[statAttack].mod.toString());
-      rollLabels.push(`+${this.data.data.scores[statAttack].mod} (${statAttack})`)
-      if (data.skills[skillAttack].value == -1) {
-        rollParts.push(unskilledAttack.toString());
+      rollParts.push(statValue);
+      rollLabels.push(`+${statValue} (${statAttack})`)
+      if (skillValue == -1) {
+        rollParts.push(unskilledAttack);
         rollLabels.push(`${unskilledAttack} (unskilled penalty)`)
       } else {
-        rollParts.push(data.skills[skillAttack].value.toString());
-        rollLabels.push(`+${data.skills[skillAttack].value} (${skillAttack})`);
+        rollParts.push(skillValue);
+        rollLabels.push(`+${skillValue} (${skillAttack})`);
       }
     }
 
@@ -599,18 +549,16 @@ export class WwnActor extends Actor {
     let thac0 = data.thac0.value;
 
     if (data.character) {
-      let statAttack = attData.item.data.score;
-      let skillAttack = attData.item.data.skill;
-      dmgParts.push(data.scores[statAttack].mod);
-      dmgLabels.push(`+${data.scores[statAttack].mod.toString()} (${statAttack})`);
+      dmgParts.push(statValue);
+      dmgLabels.push(`+${statValue} (${statAttack})`);
       if (data.warrior) {
-        let levelRoundedUp = Math.ceil(data.details.level / 2);
+        const levelRoundedUp = Math.ceil(data.details.level / 2);
         dmgParts.push(levelRoundedUp);
-        dmgLabels.push(`+${levelRoundedUp.toString()} (warrior bonus)`);
+        dmgLabels.push(`+${levelRoundedUp} (warrior bonus)`);
       }
       if (attData.item.data.skillDamage) {
-        dmgParts.push(this.data.data.skills[skillAttack].value);
-        dmgLabels.push(`+${this.data.data.skills[skillAttack].value.toString()} (${skillAttack})`)
+        dmgParts.push(skillValue);
+        dmgLabels.push(`+${skillValue} (${skillAttack})`);
       }
     } else {
       dmgParts.push(this.data.data.damageBonus);
@@ -947,14 +895,14 @@ export class WwnActor extends Actor {
       let shieldOnly = AacShieldNaked + data.scores.dex.mod + data.aac.mod;
       let shieldBonus = baseAac + data.scores.dex.mod + data.aac.mod + AacShieldMod;
       if (shieldOnly > shieldBonus) {
-        await this.data.update({ data: { aac: { value: shieldOnly, naked: naked } } });
+        await this.data.update({ data: { aac: { value: shieldOnly, shield: 0, naked: naked } } });
       } else {
         await this.data.update({ data: { aac: { value: shieldBonus, shield: AacShieldMod, naked: naked } } });
       }
     } else {
-      await this.data.update({ data: { aac: { value: baseAac + data.scores.dex.mod + data.aac.mod, naked: naked } } });
+      await this.data.update({ data: { aac: { value: baseAac + data.scores.dex.mod + data.aac.mod, naked: naked, shield: 0 } } });
     }
-    await this.data.update({ data: { skills: { sneak: { penalty: sneakPenalty }, exert: { penalty: exertPenalty }}}});
+    await this.data.update({ data: { skills: { sneakPenalty: sneakPenalty , exertPenalty: exertPenalty }}});
   }
 
   async computeModifiers() {
@@ -987,9 +935,6 @@ export class WwnActor extends Actor {
       16: 1,
       18: 2,
     };
-
-    data.langTotal = data.skills.connect.value + data.skills.know.value + 2;
-    data.languages.spoken = "WWN.NativePlus";
   }
 
   async computeSaves() {
@@ -1025,9 +970,78 @@ export class WwnActor extends Actor {
       })
     }
   }
-  
-  
-  
+
+
+  // Creates a list of skills based on the following list. Was used to generate
+  // the initial skills list to populate a compendium
+  async createSkillsManually(data,options,user) {
+    const actorData = this.data;
+    const skillList = [
+      "administer",
+      "connect",
+      "convince",
+      "craft",
+      "exert",
+      "heal",
+      "know",
+      "lead",
+      "magic",
+      "notice",
+      "perform",
+      "pray",
+      "punch",
+      "ride",
+      "sail",
+      "shoot",
+      "sneak",
+      "stab",
+      "survive",
+      "trade",
+      "work",
+      "biopsionics",
+      "metapsionics",
+      "precognition",
+      "telekinesis",
+      "telepathy",
+      "teleportation",
+      "polymath",
+    ];
+    const skills = skillList.map((el) => {
+      const skillKey = `WWN.skills.${el}`;
+      const skillDesc = `WWN.skills.desc.${el}`;
+      const imagePath = `/systems/wwn/assets/skills/${el}.png`
+      return {
+        type: "skill",
+        name: game.i18n.localize(skillKey),
+        data: {
+          ownedLevel: -1,
+          score: "int",
+          description: game.i18n.localize(skillDesc),
+          skillDice: "2d6",
+          secondary: false,
+        },
+        img: imagePath,
+      };
+    });
+
+    if (data.type === "character") {
+      await this.createEmbeddedDocuments("Item", skills);
+    }
+  }
+
+  /** @override*/
+  async _onCreate(data, options, user) {
+    await super._onCreate(data, options, user);
+    // Add primary skills from compendium
+    if (data.type === "character") {
+      let skillPack = game.packs.get("wwn.skills");
+      let toAdd = await skillPack.getDocuments();
+      let primarySkills = toAdd.filter((i) => i.data.data.secondary == false).map(item => item.toObject());
+      await this.createEmbeddedDocuments("Item", primarySkills);
+    }
+  }
+
+ 
   // ------------------------- 
   // Added for SWB custom attributes
 
@@ -1197,5 +1211,7 @@ export class WwnActor extends Actor {
     return allowed !== false ? this.update(updates) : this;
   }
   
-  
+ 
+
+
 }

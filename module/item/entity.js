@@ -60,6 +60,114 @@ export class WwnItem extends Item {
     return data;
   }
 
+  async rollSkill(options = {}) {
+    const template = "systems/wwn/templates/items/dialogs/roll-skill.html";
+    const dialogData = {
+      defaultScore: this.data.data.score,
+      dicePool: this.data.data.skillDice,
+      name: this.name,
+      rollMode: game.settings.get("core", "rollMode"),
+      rollModes: CONFIG.Dice.rollModes,
+    };
+    const newData = {
+      actor: this.actor.data,
+      item: this.data,
+      roll: {
+      },
+    };
+
+    const data = this.data.data;
+    const skillName = this.data.name;
+    let score = this.actor.data.data.scores[data.score];
+
+    // Determine if armor penalty applies
+    let armorPenalty = 0;
+    if (skillName == "Exert") {
+      armorPenalty -= this.parent.data.data.skills.exertPenalty;
+    } else if (skillName == "Sneak") {
+      armorPenalty -= this.parent.data.data.skills.sneakPenalty;
+    }
+
+    // Determine skill level, taking into account polymath and unskilled penalties
+    let skillLevel;
+    const poly = this.parent.items.find(i => i.name == "Polymath");
+    if (!poly || skillName == "Shoot" || skillName == "Stab" || skillName == "Punch") {
+      skillLevel = data.ownedLevel;
+    } else {
+      skillLevel = Math.max(poly.data.data.ownedLevel - 1, data.ownedLevel);
+    }
+
+    // Assemble dice pool
+    const rollParts = [data.skillDice, score.mod, skillLevel];
+    if (armorPenalty < 0) {
+      rollParts.push(armorPenalty);
+    }
+
+    if (options.skipDialog) {
+      const attrKey = `WWN.scores.${data.score}.short`;
+      const rollTitle = `${this.name}/${game.i18n.localize(attrKey)}`
+
+      let rollData = {
+        parts: rollParts,
+        data: newData,
+        title: rollTitle,
+        flavor: null,
+        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+        form: null,
+        rollTitle: rollTitle
+      };
+      return WwnDice.sendRoll(rollData);
+    }
+
+    const html = await renderTemplate(template, dialogData);
+    const title = `${game.i18n.localize("WWN.Roll")} ${this.name}`;
+    const _doRoll = async (html) => {
+      const form = html[0].querySelector("form");
+      rollParts[1] = this.actor.data.data.scores[form.score.value].mod;
+      if (!score) {
+        ui.notifications.error("Unable to find score on char.");
+        return;
+      }
+      const attrKey = `WWN.scores.${form.score.value}.short`;
+      const rollTitle = `${this.name}/${game.i18n.localize(attrKey)}`
+      let rollData = {
+        parts: rollParts,
+        data: newData,
+        title: rollTitle,
+        flavor: null,
+        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+        form: form,
+        rollTitle: rollTitle
+      };
+      WwnDice.sendRoll(rollData);
+    };
+
+    let buttons = {
+      ok: {
+        label: title,
+        icon: '<i class="fas fa-dice-d20"></i>',
+        callback: _doRoll,
+      },
+      cancel: {
+        icon: '<i class="fas fa-times"></i>',
+        label: game.i18n.localize("WWN.Cancel"),
+        callback: (html) => { },
+      },
+    };
+
+    //Create Dialog window
+    return new Promise((resolve) => {
+      new Dialog({
+        title: title,
+        content: html,
+        buttons: buttons,
+        default: "ok",
+        close: () => {
+        },
+      }).render(true);
+    });
+  }
+
   rollWeapon(options = {}) {
     let isNPC = this.actor.data.type != "character";
     const targets = 5;
@@ -159,7 +267,7 @@ export class WwnItem extends Item {
       const currEffort = this.data.data.effort;
       const sourceVal = this.actor.data.data.classes[sourceName].value;
       const sourceMax = this.actor.data.data.classes[sourceName].max;
-      
+
       if (sourceVal + 1 > sourceMax) return ui.notifications.warn("No Effort remaining!");
 
       this
@@ -167,9 +275,9 @@ export class WwnItem extends Item {
         .then(() => {
           this.show({ skipDialog: true });
         });
-      } else {
-        this.show({ skipDialog: true });
-      }
+    } else {
+      this.show({ skipDialog: true });
+    }
   }
 
   getTags() {
@@ -291,6 +399,10 @@ export class WwnItem extends Item {
       case "focus":
       case "ability":
         this.show();
+        break;
+      case "skill":
+        this.rollSkill();
+        break;
     }
   }
 

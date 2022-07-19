@@ -162,6 +162,13 @@ export const registerSettings = function () {
   });
   
   
+  game.settings.register("wwn", "systemMigrationVersion", {
+    config: false,
+    scope: "world",
+    type: String,
+    default: ""
+  });
+  
   // Added for SWB custom attributes
   
   game.settings.register("wwn", "macroShorthand", {
@@ -172,6 +179,5 @@ export const registerSettings = function () {
     default: true,
     config: true
   });
-  
   
 };
