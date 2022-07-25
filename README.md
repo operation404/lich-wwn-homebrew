@@ -1,6 +1,6 @@
 # Legacy Campaign WWN Homebrew Modifications
 This fork of the WWN Foundryvtt sheet is for the addition of various homebrew features for a personal game. So far, the additions include the following:
-* Addition of the Alchemy and Enchant skills, removal of the work skill.
+* ~Addition of the Alchemy and Enchant skills, removal of the work skill.~ (Original fork added support for removing and adding new custom skills.)
 * Addition of the Simple Worldbuilding Custom Attributes tab.
 
 # Worlds Without Number for Foundry VTT (Unofficial)
