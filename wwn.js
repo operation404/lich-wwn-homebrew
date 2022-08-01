@@ -118,7 +118,6 @@ Hooks.once("ready", async () => {
  -------------------------------------------- */
 Hooks.on("canvasInit", function() {
   // Extend Diagonal Measurement
-  canvas.grid.diagonalRule = "EUCL";
   SquareGrid.prototype.measureDistances = measureDistances;
 });
 
@@ -127,7 +126,6 @@ const measureDistances = function(segments, options={}) {
 
   // Track the total number of diagonals
   let nDiagonal = 0;
-  const rule = this.parent.diagonalRule;
   const d = canvas.dimensions;
 
   // Iterate over measured segments
@@ -143,21 +141,8 @@ const measureDistances = function(segments, options={}) {
     let ns = Math.abs(ny - nx);
     nDiagonal += nd;
 
-    // Alternative DMG Movement
-    if (rule === "5105") {
-      let nd10 = Math.floor(nDiagonal / 2) - Math.floor((nDiagonal - nd) / 2);
-      let spaces = (nd10 * 2) + (nd - nd10) + ns;
-      return spaces * canvas.dimensions.distance;
-    }
-
-    // Euclidean Measurement
-    else if (rule === "EUCL") {
-	  return Math.round(Math.hypot(nx, ny) * canvas.scene.data.gridDistance);
-	  //return Math.round(Math.hypot(nx, ny) * canvas.scene.data.gridDistance * 100) / 100;
-    }
-
-    // Standard PHB Movement
-    else return (ns + nd) * canvas.scene.data.gridDistance;
+	console.log("new measure");
+	return Math.round(Math.hypot(nx, ny) * canvas.scene.data.gridDistance);
   });
 };
 
