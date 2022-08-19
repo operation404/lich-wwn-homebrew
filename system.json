@@ -1,12 +1,16 @@
 {
   "name": "wwn",
-  "title": "Worlds Without Number",
+  "title": "Worlds Without Number - Lich Homebrew
   "description": "Play Worlds Without Number on Foundry VTT",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "minimumCoreVersion": "0.8.9",
   "compatibleCoreVersion": "9",
   "templateVersion": 6.8,
-  "author": "SobranDM",
+  "authors": [
+    { "name": "SobranDM" },
+    { "name": "Lich",
+      "discord": "operation404#8123" }
+  ],
   "esmodules": ["wwn.js"],
   "styles": ["wwn.css"],
   "packs": [
@@ -156,7 +160,7 @@
   ],
   "gridDistance": 5,
   "gridUnits": "ft",
-  "url": "https://github.com/SobranDM/foundryvtt-wwn",
-  "manifest": "https://github.com/SobranDM/foundryvtt-wwn/releases/latest/download/system.json",
-  "download": "https://github.com/SobranDM/foundryvtt-wwn/releases/download/v1.0.0/wwn.zip"
+  "url": "https://github.com/operation404/lich-wwn-homebrew",
+  "manifest": "https://github.com/operation404/lich-wwn-homebrew/releases/latest/download/system.json",
+  "download": "https://github.com/operation404/lich-wwn-homebrew/releases/latest/download/wwn.zip"
 }
