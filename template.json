@@ -228,7 +228,11 @@
         "hd": "1d8",
         "value": 4,
         "max": 4
-      }
+      },
+	  
+	  "attributes": {},
+	  "groups": {}
+	  
     },
     "faction": {
       "templates": [],
