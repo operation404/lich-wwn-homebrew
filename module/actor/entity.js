@@ -513,7 +513,7 @@ export class WwnActor extends Actor {
       } else {
         attData.item.data.shockTotal = statValue + weaponShock;
       }
-      if (attData.item.data.skillDamage) {
+      if (attData.item.data.skillShock) {
         attData.item.data.shockTotal = attData.item.data.shockTotal + skillValue;
       }
     } else {

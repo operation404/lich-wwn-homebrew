@@ -276,8 +276,11 @@
   "WWN.items.ArmorAAC": "AC",
   "WWN.items.ArmorBonus": "Magic",
   "WWN.items.ArmorBonusHint": "Magical bonus to an armor's base Armor Class.",
-  "WWN.items.SkillDamageShort": "Skill Damage",
-  "WWN.items.SkillDamageLong": "Add skill level to weapon damage and Shock.",
+  "WWN.items.SkillDamageShockShort": "Skill Damage / Shock",
+  "WWN.items.SkillDamageShockLong": "Add skill level to weapon damage and Shock.",
+  "WWN.items.SkillDamageLong": "Add skill level to weapon damage.",
+  "WWN.items.SkillShockLong": "Add skill level to weapon Shock.",  
+  
   "WWN.items.Bonus": "Bonus",
   "WWN.items.AtkBonus": "Attack Bonus",
   "WWN.items.roundAttacks": "Attacks Spent this Round",

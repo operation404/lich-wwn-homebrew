@@ -288,6 +288,7 @@
     "damage": "1d6",
     "bonus": 0,
     "skillDamage": false,
+	"skillShock": false,
     "shock": {
       "damage": "1",
       "ac": "15"
