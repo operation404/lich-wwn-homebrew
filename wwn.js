@@ -141,7 +141,6 @@ const measureDistances = function(segments, options={}) {
     let ns = Math.abs(ny - nx);
     nDiagonal += nd;
 
-	console.log("new measure");
 	return Math.round(Math.hypot(nx, ny) * canvas.scene.data.gridDistance);
   });
 };
