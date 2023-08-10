@@ -598,8 +598,11 @@ export class WwnActor extends Actor {
     amount = Math.floor(parseInt(amount) * multiplier);
     const hp = this.data.data.hp;
 
+    // homebrew for negative hp values
+    const min = game.settings.get("wwn", "negativeHP");
+
     // Remaining goes to health
-    const dh = Math.clamped(hp.value - amount, 0, hp.max);
+    const dh = Math.clamped(hp.value - amount, min, hp.max);
 
     // Update the Actor
     return this.update({
@@ -1206,10 +1209,23 @@ export class WwnActor extends Actor {
 
   async modifyTokenAttribute(attribute, value, isDelta = false, isBar = true) {
     const current = foundry.utils.getProperty(this.data.data, attribute);
+    
+    const updates = {};
     if ( !isBar || !isDelta || (current?.dtype !== "Resource") ) {
-      return super.modifyTokenAttribute(attribute, value, isDelta, isBar);
+
+      // Homebrew for negative hp
+      if (attribute === "hp") {
+        const min = game.settings.get("wwn", "negativeHP");
+        updates[`data.hp.value`] = Math.clamped(value, min, current.max);
+      } else {
+        return super.modifyTokenAttribute(attribute, value, isDelta, isBar);
+      }      
+    
+    } else {
+      updates[`data.${attribute}.value`] = Math.clamped(current.value + value, current.min, current.max);
     }
-    const updates = {[`data.${attribute}.value`]: Math.clamped(current.value + value, current.min, current.max)};
+
+    // standard call to hooks on change
     const allowed = Hooks.call("modifyTokenAttribute", {attribute, value, isDelta, isBar}, updates);
     return allowed !== false ? this.update(updates) : this;
   }

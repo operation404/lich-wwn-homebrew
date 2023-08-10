@@ -179,5 +179,16 @@ export const registerSettings = function () {
     default: true,
     config: true
   });
+
+  // Added for negative HP support
+
+  game.settings.register("wwn", "negativeHP", {
+    name: "Negative HP",
+    hint: "What the minimum negative HP value can be. Set to 0 or lower or expect weird behavior. Default is 0, in which case actors cannot have their HP go into the negatives at all.",
+    default: 0,
+    scope: "world",
+    type: Number,
+    config: true
+    });
   
 };
