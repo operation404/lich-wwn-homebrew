@@ -3,6 +3,7 @@ This fork of the WWN Foundryvtt sheet is for the addition of various homebrew fe
 * ~Addition of the Alchemy and Enchant skills, removal of the work skill.~ (Original fork added support for removing and adding new custom skills.)
 * Addition of the Simple Worldbuilding Custom Attributes tab.
 * Euclidean measurement for the grid ruler.
+* System setting to allow negative HP values.
 
 # Worlds Without Number for Foundry VTT (Unofficial)
 Everything you need to play Worlds Without Number in Foundry VTT. This was forked from v1.1.2 of the Old School Essentials project developed by U~man. I have managed to mangle his beautiful project into something that works for Worlds Without Number. All praise should be directed toward him. Any bugs or mistakes are undoubtedly my own.
