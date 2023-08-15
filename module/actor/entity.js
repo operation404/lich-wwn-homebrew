@@ -1216,7 +1216,7 @@ export class WwnActor extends Actor {
       // Homebrew for negative hp
       if (attribute === "hp") {
         const min = game.settings.get("wwn", "negativeHP");
-        updates[`data.hp.value`] = Math.clamped(value, min, current.max);
+        updates[`data.hp.value`] = Math.clamped(value + (isDelta ? current.value : 0), min, current.max);
       } else {
         return super.modifyTokenAttribute(attribute, value, isDelta, isBar);
       }      
